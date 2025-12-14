@@ -1,0 +1,8 @@
+﻿jupyter~=1.1.1
+numpy~=2.3.3
+pandas~=2.3.3
+scikit-learn~=1.7.2
+pyarrow~=21.0.0
+flake8~=7.3.0
+mlflow~=3.5.1
+pytest~=8.4.2
