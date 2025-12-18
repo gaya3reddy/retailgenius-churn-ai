@@ -20,6 +20,7 @@ mlflow.set_experiment("RetailGenius-Churn")
 
 DATA_PATH = Path("data/processed/features.csv")
 
+
 def main():
     df = pd.read_csv(DATA_PATH)
 
@@ -58,14 +59,15 @@ def main():
         mlflow.log_metric("roc_auc", auc)
 
         # log the whole pipeline (imputer + model)
-        # mlflow.sklearn.log_model(pipeline, "model")
         signature = infer_signature(X_train, pipeline.predict_proba(X_train))
-        mlflow.sklearn.log_model(pipeline, "model", signature=signature, input_example=X_train.iloc[:5])
+        mlflow.sklearn.log_model(pipeline, "model",
+                                 signature=signature,
+                                 input_example=X_train.iloc[:5])
 
         print(f"Accuracy: {acc:.3f}")
         print(f"F1 Score: {f1:.3f}")
         print(f"AUC: {auc:.3f}")
 
+
 if __name__ == "__main__":
     main()
- 

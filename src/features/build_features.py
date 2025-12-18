@@ -4,6 +4,7 @@ from pathlib import Path
 INPUT_PATH = Path("data/processed/processed_churn.csv")
 OUTPUT_PATH = Path("data/processed/features.csv")
 
+
 def main():
     df = pd.read_csv(INPUT_PATH)
 
@@ -20,6 +21,7 @@ def main():
 
     df.to_csv(OUTPUT_PATH, index=False)
     print("Feature dataset saved.")
+
 
 if __name__ == "__main__":
     main()
