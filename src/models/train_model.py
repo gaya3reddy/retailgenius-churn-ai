@@ -1,3 +1,18 @@
+"""
+Training script for the Customer Churn Prediction model.
+
+This module handles the end-to-end training pipeline, including:
+1. Loading processed feature data.
+2. Splitting data into training and testing sets.
+3. Building a Scikit-Learn Pipeline (Imputation + Scaling + Logistic Regression).
+4. Logging parameters, metrics, and the trained model artifact to MLflow.
+
+Example:
+    Run this script directly to train the baseline model:
+
+    $ python src/models/train_model.py
+"""
+
 import pandas as pd
 from pathlib import Path
 
@@ -22,6 +37,19 @@ DATA_PATH = Path("data/processed/features.csv")
 
 
 def main():
+    """
+    Main training routine.
+
+    Steps:
+        1. Loads features from ``data/processed/features.csv``.
+        2. Splits data into train/test sets (80/20 split).
+        3. Trains a LogisticRegression pipeline with Median Imputation.
+        4. Logs accuracy, F1-score, and ROC-AUC to MLflow.
+        5. Saves the model artifact to MLflow for later serving.
+
+    Raises:
+        ValueError: If the 'Churn' target column is missing from the input data.
+    """
     df = pd.read_csv(DATA_PATH)
 
     target_col = "Churn"

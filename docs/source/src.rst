@@ -10,6 +10,7 @@ Subpackages
    src.data
    src.features
    src.models
+   src.xai
 
 Module contents
 ---------------

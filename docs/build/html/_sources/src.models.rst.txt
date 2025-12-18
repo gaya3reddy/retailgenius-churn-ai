@@ -20,6 +20,14 @@ src.models.train\_model module
    :show-inheritance:
    :undoc-members:
 
+src.models.train\_xgb\_model module
+-----------------------------------
+
+.. automodule:: src.models.train_xgb_model
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Module contents
 ---------------
 
