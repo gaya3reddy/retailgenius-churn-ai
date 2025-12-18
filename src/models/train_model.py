@@ -7,9 +7,16 @@ from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 
 import mlflow
 import mlflow.sklearn
+from mlflow.models.signature import infer_signature
+
+
+# Always log to the project's local mlruns folder
+mlflow.set_tracking_uri(f"file:///{Path('mlruns').resolve().as_posix()}")
+mlflow.set_experiment("RetailGenius-Churn")
 
 DATA_PATH = Path("data/processed/features.csv")
 
@@ -30,10 +37,11 @@ def main():
     # Pipeline: impute missing values then train
     pipeline = Pipeline(steps=[
         ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler(with_mean=False)),
         ("model", LogisticRegression(max_iter=1000))
     ])
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_name="logreg_baseline"):
         pipeline.fit(X_train, y_train)
 
         y_pred = pipeline.predict(X_test)
@@ -50,7 +58,9 @@ def main():
         mlflow.log_metric("roc_auc", auc)
 
         # log the whole pipeline (imputer + model)
-        mlflow.sklearn.log_model(pipeline, "model")
+        # mlflow.sklearn.log_model(pipeline, "model")
+        signature = infer_signature(X_train, pipeline.predict_proba(X_train))
+        mlflow.sklearn.log_model(pipeline, "model", signature=signature, input_example=X_train.iloc[:5])
 
         print(f"Accuracy: {acc:.3f}")
         print(f"F1 Score: {f1:.3f}")
