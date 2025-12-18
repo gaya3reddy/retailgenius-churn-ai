@@ -83,7 +83,6 @@
 <span class="sd">            --input data/processed/features.csv \\</span>
 <span class="sd">            --output data/processed/predictions.csv</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -93,6 +92,15 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../src.models.html#src.models.predict_model.parse_args">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses command-line arguments for model inference.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        argparse.Namespace: The parsed arguments containing:</span>
+<span class="sd">            - model_uri (str): The MLflow URI of the model.</span>
+<span class="sd">            - input (str): Path to input CSV.</span>
+<span class="sd">            - output (str): Path to save output predictions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">p</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--model-uri&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;MLflow model URI, e.g. runs:/&lt;run_id&gt;/model&quot;</span><span class="p">)</span>

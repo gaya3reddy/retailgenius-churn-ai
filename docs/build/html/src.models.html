@@ -19,6 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.xai package" href="src.xai.html" />
     <link rel="prev" title="src.features package" href="src.features.html" /> 
 </head>
 
@@ -49,6 +50,7 @@
 <li class="toctree-l4"><a class="reference internal" href="src.data.html">src.data package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="src.features.html">src.features package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">src.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.xai.html">src.xai package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
@@ -117,7 +119,24 @@ for a given input dataset. It is designed to be run from the command line.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="src.models.predict_model.parse_args">
 <span class="sig-prename descclassname"><span class="pre">src.models.predict_model.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models/predict_model.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.models.predict_model.parse_args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Parses command-line arguments for model inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The parsed arguments containing:</dt><dd><ul class="simple">
+<li><p>model_uri (str): The MLflow URI of the model.</p></li>
+<li><p>input (str): Path to input CSV.</p></li>
+<li><p>output (str): Path to save output predictions.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>argparse.Namespace</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-src.models.train_model">
@@ -153,6 +172,39 @@ for a given input dataset. It is designed to be run from the command line.</p>
 </dd></dl>
 
 </section>
+<section id="module-src.models.train_xgb_model">
+<span id="src-models-train-xgb-model-module"></span><h2>src.models.train_xgb_model module<a class="headerlink" href="#module-src.models.train_xgb_model" title="Link to this heading"></a></h2>
+<p>Training script for the Customer Churn Prediction model.</p>
+<p>This module handles the end-to-end training pipeline, including:
+1. Loading processed feature data.
+2. Splitting data into training and testing sets.
+3. Building a Pipeline (Imputation + XGBoost Classifier).
+4. Logging parameters, metrics, and the trained model artifact to MLflow.</p>
+<p class="rubric">Example</p>
+<p>Run this script directly to train the tree-based model:</p>
+<p>$ python src/models/train_xgb_model.py</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.models.train_xgb_model.main">
+<span class="sig-prename descclassname"><span class="pre">src.models.train_xgb_model.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/models/train_xgb_model.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.models.train_xgb_model.main" title="Link to this definition"></a></dt>
+<dd><p>Main training routine.</p>
+<dl class="simple">
+<dt>Steps:</dt><dd><ol class="arabic simple">
+<li><p>Loads features from <code class="docutils literal notranslate"><span class="pre">data/processed/features.csv</span></code>.</p></li>
+<li><p>Splits data into train/test sets (80/20 split).</p></li>
+<li><p>Trains a XGBoost pipeline with Median Imputation.</p></li>
+<li><p>Logs accuracy, F1-score, and ROC-AUC to MLflow.</p></li>
+<li><p>Saves the model artifact to MLflow for later serving.</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the ‘Churn’ target column is missing from the input data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-src.models">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.models" title="Link to this heading"></a></h2>
 </section>
@@ -163,6 +215,7 @@ for a given input dataset. It is designed to be run from the command line.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="src.features.html" class="btn btn-neutral float-left" title="src.features package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.xai.html" class="btn btn-neutral float-right" title="src.xai package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

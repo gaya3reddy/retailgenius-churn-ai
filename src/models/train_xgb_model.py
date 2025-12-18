@@ -113,7 +113,7 @@ def main():
         signature = infer_signature(X_train, y_prob.reshape(-1, 1))
         mlflow.sklearn.log_model(pipeline, "model",
                                  signature=signature,
-                                 input_example=X_train.iloc[:5])
+                                 input_example=X_train.iloc[:5], registered_model_name="RetailGenius_Churn_Model")
 
         print(f"Accuracy: {acc:.3f}")
         print(f"F1 Score: {f1:.3f}")

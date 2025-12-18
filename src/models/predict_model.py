@@ -1,3 +1,17 @@
+"""
+Batch Inference Script for RetailGenius.
+
+This script loads a trained model from MLflow and generates predictions 
+for a given input dataset. It is designed to be run from the command line.
+
+Example:
+    .. code-block:: bash
+
+        python src/models/predict_model.py \\
+            --model-uri runs:/<run_id>/model \\
+            --input data/processed/features.csv \\
+            --output data/processed/predictions.csv
+"""
 import argparse
 from pathlib import Path
 import pandas as pd
@@ -5,6 +19,15 @@ import mlflow
 
 
 def parse_args():
+    """
+    Parses command-line arguments for model inference.
+
+    Returns:
+        argparse.Namespace: The parsed arguments containing:
+            - model_uri (str): The MLflow URI of the model.
+            - input (str): Path to input CSV.
+            - output (str): Path to save output predictions.
+    """
     p = argparse.ArgumentParser()
     p.add_argument("--model-uri", type=str, required=True,
                    help="MLflow model URI, e.g. runs:/<run_id>/model")
@@ -18,6 +41,15 @@ def parse_args():
 
 
 def main():
+    """
+    Main execution entry point.
+
+    1. Parses arguments.
+    2. Loads the input data CSV.
+    3. Loads the specified model from MLflow.
+    4. Generates predictions (classes).
+    5. Saves the results to a new CSV file.
+    """
     args = parse_args()
 
     X = pd.read_csv(args.input)
