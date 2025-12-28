@@ -158,13 +158,6 @@ This project was developed for:
 
 ---
 
-Great idea — this is the **last missing piece** that makes your README feel *complete and professional*.
-Below is a **clear, beginner-proof “How to run from scratch” section** that matches your project exactly.
-
-You can copy-paste this **as-is** under a new section in your `README.md`.
-
----
-
 ## ▶️ How to Run the Project from Scratch
 
 This section explains how to set up the environment and run the complete pipeline from raw data to predictions.
