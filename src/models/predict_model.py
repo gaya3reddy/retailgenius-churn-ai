@@ -55,8 +55,12 @@ def main():
     X = pd.read_csv(args.input)
 
     # If churn label is accidentally present, drop it
-    if "churn" in X.columns:
-        X = X.drop(columns=["churn"])
+    # if "churn" in X.columns:
+    #     X = X.drop(columns=["churn"])
+    
+    for col in ["Churn", "churn"]:
+        if col in X.columns:
+            X = X.drop(columns=[col])
 
     model = mlflow.pyfunc.load_model(args.model_uri)
 

@@ -1,136 +1,223 @@
-# RetailGenius – AI-Powered Customer Churn Prediction
 
-This project implements an **end-to-end machine learning pipeline** for customer churn prediction in an e-commerce context.
-It was developed as part of the **EPITA – AI Project Methodology course**, covering both **functional (Part 1)** and **technical (Part 2)** aspects of an AI project.
+# RetailGenius – AI-Powered Customer Churn Prediction (XGBoost + SHAP)
 
-The focus of this project is **methodology, reproducibility, and engineering best practices**, rather than maximizing predictive performance.
+An **end-to-end, production-style machine learning system** for customer churn prediction in an e-commerce context.
+
+Developed as part of the **EPITA – AI Project Methodology** course, this project demonstrates the complete AI lifecycle:
+from business understanding and data engineering to model training, MLOps, explainability, and deployment.
 
 ---
 
 ## 🎯 Project Objectives
 
-* Predict customer churn based on historical behavioral and transactional data
-* Design a **reproducible and modular ML pipeline**
-* Apply **software engineering best practices** to an AI project
-* Track experiments and models using **MLflow**
-* Provide a clean **training and inference workflow**
+- Predict customer churn using behavioral and transactional features  
+- Build a **modular and reproducible ML pipeline**  
+- Track experiments and models with **MLflow**  
+- Apply **XGBoost** for high-performance learning  
+- Add **SHAP explainability (XAI)** for model transparency  
+- Register and serve models using **MLflow Model Registry**  
+- Follow **CRISP-DM** and MLOps best practices  
 
 ---
 
 ## 🏗️ Project Structure
 
-The repository follows a production-oriented structure inspired by **Cookiecutter Data Science**:
-
 ```
+
 retailgenius-churn-ai/
 │
 ├── data/
-│   ├── raw/                # Raw input data (not versioned)
-│   ├── processed/          # Cleaned data, features, predictions
+│   ├── raw/
+│   ├── processed/
 │
 ├── notebooks/
-│   └── 01_eda.ipynb        # Exploratory Data Analysis
+│   └── 01_eda.ipynb
+│
+├── reports/
+│   └── xai_outputs/
+│       ├── shap_beeswarm.png
+│       ├── shap_summary_bar.png
+│       ├── shap_dependence_top_feature.png
+│       └── shap_waterfall_row_0.png
 │
 ├── src/
 │   ├── data/
-│   │   └── make_dataset.py         # Data ingestion & basic cleaning
+│   │   └── make_dataset.py
 │   ├── features/
-│   │   └── build_features.py       # Feature engineering
+│   │   └── build_features.py
 │   ├── models/
-│   │   ├── train_model.py          # Model training + MLflow logging
-│   │   └── predict_model.py        # Model inference using MLflow
-│   └── visualization/
-│       └── visualize.py            # (Optional) visualizations
+│   │   ├── train_model.py
+│   │   ├── train_xgb_model.py
+│   │   └── predict_model.py
+│   ├── xai/
+│       └── shap_explain.py
 │
-├── mlruns/                 # MLflow experiments (ignored in Git)
-├── requirements.txt        # Project dependencies
-├── README.md               # Project documentation
+├── docs/
+├── mlruns/
+├── requirements.txt
+├── README.md
 └── .gitignore
+
 ```
 
 ---
 
-## 📊 Data & Feature Engineering
+## 📊 Data & Features
 
-* Raw e-commerce data is ingested from Excel/CSV files
-* Data cleaning includes:
+- Dataset: Kaggle E-Commerce Customer Churn Dataset  
+- Cleaning:
+  - Duplicate removal  
+  - Missing value imputation  
+- Feature engineering:
+  - Behavioral frequency
+  - Order patterns
+  - Customer profile attributes  
 
-  * Removal of duplicates
-  * Handling missing values
-* Feature engineering is implemented via scripts to ensure reproducibility
-* Final features are stored in `data/processed/features.csv`
+Final features are stored in:
 
----
+```
 
-## 🤖 Model Training
+data/processed/features.csv
 
-* **Baseline model:** Logistic Regression
-* **Why Logistic Regression?**
-
-  * Interpretable
-  * Robust baseline for churn prediction
-  * Well-suited for imbalanced classification problems
-
-### Training Pipeline
-
-A **Scikit-learn Pipeline** is used to avoid data leakage:
-
-* Median imputation for missing values
-* Feature scaling
-* Model training
+```
 
 ---
 
-## 📈 Experiment Tracking with MLflow
+## 🤖 Models
 
-MLflow is used to manage experiments and models:
+| Model | Purpose | Notes |
+|------|--------|------|
+| Logistic Regression | Baseline | Interpretable, fast |
+| XGBoost (Advanced) | Production model | High performance, imbalance-aware |
 
-* Track parameters and metrics:
+### Imbalance Handling
+
+```
+
+Churn = 0 → 4682
+Churn = 1 → 948
+
+````
+
+Handled using:
+
+```python
+scale_pos_weight = negative / positive
+````
+
+in XGBoost.
+
+---
+
+## 📈 MLflow Tracking & Registry
+
+* Parameters, metrics, and artifacts are logged
+* Models are registered in the **MLflow Model Registry**
+* Each run stores:
 
   * Accuracy
   * F1-score
   * ROC-AUC
-* Log model artifacts
-* Store model signatures and input examples
-* Compare multiple runs through the MLflow UI
+  * Model signature & input examples
 
-Each experiment is logged under the experiment name:
+### Launch MLflow UI
+
+```bash
+mlflow ui --host 127.0.0.1 --port 5000
+```
+
+Open:
 
 ```
-RetailGenius-Churn
+http://127.0.0.1:5000
 ```
 
 ---
 
-## 🔮 Prediction Pipeline
+## 🔍 Explainable AI with SHAP
 
-A dedicated inference script (`predict_model.py`) allows predictions on new data:
+SHAP is applied to the **XGBoost model**:
 
-* Loads the trained model directly from MLflow using a `runs:/` URI
-* Applies the same preprocessing pipeline used during training
-* Outputs predictions as a CSV file
+* Global feature importance (beeswarm & bar plots)
+* Feature interaction analysis
+* Local explanations (waterfall plots)
 
-Example usage:
+Saved in:
+
+```
+reports/xai_outputs/
+```
+
+---
+
+## ▶️ How to Run the Project from Scratch
+
+### 1. Clone
+
+```bash
+git clone https://github.com/gaya3reddy/retailgenius-churn-ai.git
+cd retailgenius-churn-ai
+```
+
+### 2. Create Environment
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### 3. Install
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Add Raw Data
+
+```
+data/raw/E_Commerce_Dataset.xlsx
+```
+
+### 5. Prepare Data
+
+```bash
+python src/data/make_dataset.py
+```
+
+### 6. Build Features
+
+```bash
+python src/features/build_features.py
+```
+
+### 7. Train XGBoost
+
+```bash
+python src/models/train_xgb_model.py
+```
+
+### 8. Explain with SHAP
+
+```bash
+python src/xai/shap_explain.py
+```
+
+### 9. Predict
 
 ```bash
 python src/models/predict_model.py \
-  --model-uri runs:/<RUN_ID>/model \
+  --model-uri models:/RetailGenius_Churn_Model/Production \
   --input data/processed/features.csv \
   --output data/processed/predictions.csv
 ```
 
 ---
 
-## 🧪 Code Quality & Reproducibility
+## 🧪 Code Quality
 
-* Python dependencies are managed via a virtual environment and `requirements.txt`
-* Static code analysis performed using **flake8**
-* Data artifacts and MLflow runs are excluded from version control
-* GitHub is used for:
-
-  * Version control
-  * Feature branches
-  * Clean, incremental commits
+```bash
+flake8 src
+```
 
 ---
 
@@ -139,7 +226,10 @@ python src/models/predict_model.py \
 * Python
 * Pandas, NumPy
 * Scikit-learn
-* MLflow
+* XGBoost
+* MLflow (Tracking + Registry + Serving)
+* SHAP (Explainable AI)
+* Sphinx
 * Git & GitHub
 * flake8
 
@@ -147,180 +237,30 @@ python src/models/predict_model.py \
 
 ## 📝 Academic Context
 
-This project was developed for:
+**Course:** AI Project Methodology
+**Institution:** EPITA
 
-* **Course:** AI Project Methodology
-* **Institution:** EPITA
-* **Scope:**
+**Scope:**
 
-  * Part 1: Functional methodology (business understanding, governance)
-  * Part 2: Technical methodology (implementation & MLOps practices)
-
----
-
-Great idea — this is the **last missing piece** that makes your README feel *complete and professional*.
-Below is a **clear, beginner-proof “How to run from scratch” section** that matches your project exactly.
-
-You can copy-paste this **as-is** under a new section in your `README.md`.
+* Part 1 – CRISP-DM, business, governance
+* Part 2 – ML pipeline & MLOps
+* Part 3 – XAI, registry, deployment
 
 ---
-
-## ▶️ How to Run the Project from Scratch
-
-This section explains how to set up the environment and run the complete pipeline from raw data to predictions.
-
----
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/gaya3reddy/retailgenius-churn-ai.git
-cd retailgenius-churn-ai
-```
-
----
-
-### 2️⃣ Create and Activate a Virtual Environment
-
-**Windows (PowerShell):**
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-**macOS / Linux:**
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
----
-
-### 3️⃣ Install Dependencies
-
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
----
-
-### 4️⃣ Prepare the Data
-
-Place the raw dataset file in:
-
-```
-data/raw/
-```
-
-Example:
-
-```
-data/raw/E_Commerce_Dataset.xlsx
-```
-
----
-
-### 5️⃣ Run Data Preparation
-
-This step cleans the raw data and saves a processed dataset.
-
-```bash
-python src/data/make_dataset.py
-```
-
-Output:
-
-```
-data/processed/processed_churn.csv
-```
-
----
-
-### 6️⃣ Run Feature Engineering
-
-This step generates model-ready features.
-
-```bash
-python src/features/build_features.py
-```
-
-Output:
-
-```
-data/processed/features.csv
-```
-
----
-
-### 7️⃣ Train the Model and Track Experiments
-
-This step:
-
-* Trains the baseline model
-* Logs metrics and artifacts using MLflow
-
-```bash
-python src/models/train_model.py
-```
-
----
-
-### 8️⃣ Launch MLflow UI (Optional but Recommended)
-
-```bash
-mlflow ui --host 127.0.0.1 --port 5000
-```
-
-Open in browser:
-
-```
-http://127.0.0.1:5000
-```
-
----
-
-### 9️⃣ Generate Predictions
-
-Use the trained model to generate predictions on new data.
-
-```bash
-python src/models/predict_model.py \
-  --model-uri runs:/<RUN_ID>/model \
-  --input data/processed/features.csv \
-  --output data/processed/predictions.csv
-```
-
-Output:
-
-```
-data/processed/predictions.csv
-```
-
----
-
-### 🔁 Notes on Reproducibility
-
-* All preprocessing steps are embedded in a Scikit-learn Pipeline
-* The same pipeline is used for training and inference
-* MLflow ensures experiment and model reproducibility
-* Data and model artifacts are excluded from version control
-
----
-
-### 🧪 Code Quality Check (Optional)
-
-```bash
-flake8 src
-```
-
----
-
 
 ## ✅ Conclusion
 
-RetailGenius demonstrates a **complete AI project lifecycle**, from data preparation to model training, experiment tracking, and inference.
-The project emphasizes **engineering discipline, reproducibility, and clarity**, aligning with real-world AI system development practices.
+RetailGenius demonstrates a **real-world AI system**, combining:
+
+* Engineering discipline
+* Explainable AI
+* Reproducibility
+* Deployment readiness
+
+This project reflects **industry-grade ML workflows** rather than a single model experiment.
+
+```
+
+---
+
 

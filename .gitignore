@@ -7,3 +7,7 @@ __pycache__/
 /models/
 .xlsx
 .csv
+data/processed/predictions.csv
+docs/build/**
+data/raw/
+src/data/
