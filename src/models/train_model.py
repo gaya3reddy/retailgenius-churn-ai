@@ -54,7 +54,7 @@ def main():
 
     target_col = "Churn"
     if target_col not in df.columns:
-        raise ValueError("Target column 'churn' not found in dataset")
+        raise ValueError("Target column 'Churn' not found in dataset")
 
     X = df.drop(columns=[target_col])
     y = df[target_col]
