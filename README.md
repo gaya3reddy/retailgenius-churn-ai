@@ -248,6 +248,160 @@ flake8 src
 
 ---
 
+## ▶️ How to Run the Project from Scratch
+
+This section explains how to set up the environment and run the complete pipeline from raw data to predictions.
+
+---
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/gaya3reddy/retailgenius-churn-ai.git
+cd retailgenius-churn-ai
+```
+
+---
+
+### 2️⃣ Create and Activate a Virtual Environment
+
+**Windows (PowerShell):**
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+**macOS / Linux:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+---
+
+### 3️⃣ Install Dependencies
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+---
+
+### 4️⃣ Prepare the Data
+
+Place the raw dataset file in:
+
+```
+data/raw/
+```
+
+Example:
+
+```
+data/raw/E_Commerce_Dataset.xlsx
+```
+
+---
+
+### 5️⃣ Run Data Preparation
+
+This step cleans the raw data and saves a processed dataset.
+
+```bash
+python src/data/make_dataset.py
+```
+
+Output:
+
+```
+data/processed/processed_churn.csv
+```
+
+---
+
+### 6️⃣ Run Feature Engineering
+
+This step generates model-ready features.
+
+```bash
+python src/features/build_features.py
+```
+
+Output:
+
+```
+data/processed/features.csv
+```
+
+---
+
+### 7️⃣ Train the Model and Track Experiments
+
+This step:
+
+* Trains the baseline model
+* Logs metrics and artifacts using MLflow
+
+```bash
+python src/models/train_model.py
+```
+
+---
+
+### 8️⃣ Launch MLflow UI (Optional but Recommended)
+
+```bash
+mlflow ui --host 127.0.0.1 --port 5000
+```
+
+Open in browser:
+
+```
+http://127.0.0.1:5000
+```
+
+---
+
+### 9️⃣ Generate Predictions
+
+Use the trained model to generate predictions on new data.
+
+```bash
+python src/models/predict_model.py \
+  --model-uri runs:/<RUN_ID>/model \
+  --input data/processed/features.csv \
+  --output data/processed/predictions.csv
+```
+
+Output:
+
+```
+data/processed/predictions.csv
+```
+
+---
+
+### 🔁 Notes on Reproducibility
+
+* All preprocessing steps are embedded in a Scikit-learn Pipeline
+* The same pipeline is used for training and inference
+* MLflow ensures experiment and model reproducibility
+* Data and model artifacts are excluded from version control
+
+---
+
+### 🧪 Code Quality Check (Optional)
+
+```bash
+flake8 src
+```
+
+---
+
+
 ## ✅ Conclusion
 
 RetailGenius demonstrates a **real-world AI system**, combining:
